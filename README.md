@@ -26,13 +26,11 @@ What this version adds: a hard usage budget you pick before anything runs, model
 
 ## Receipts, not vibes
 
-Same one-line brief ("build a landing page for a fictional sleep-tracking ring"), same model on both sides. The only variable is the process.
+We ran the same one-line brief ("build a landing page for a fictional sleep-tracking ring") through the same model twice: once as a naive single pass, once under the gauntlet's rules. Both outputs look respectable. That is exactly the point: looks are not the difference.
 
-| One naive pass | Under the gauntlet's rules |
-|---|---|
-| ![Single-pass build](assets/demo/single-pass-desktop.png) | ![Gauntlet build](assets/demo/gauntlet-desktop.png) |
+![The naive pass shipped a fabricated press bar and unchecked claims; the gauntlet build proved eight pre-written criteria with browser evidence](assets/demo/receipts.png)
 
-Both pages look respectable, and that is exactly the point: looks are not the difference. The naive pass shipped a fabricated "backed & covered by Wired, TechCrunch, The Verge" press bar and a stack of claims nobody checked. The gauntlet build worked from eight criteria written before the first line of code and had to prove each one with evidence before calling itself done: contrast ratios computed (lowest pair 5.16:1), FAQ keyboard toggles actually pressed, a full DOM scan for overflow at 390px, nav anchors clicked and verified. One process produces a page that looks done. The other produces a page that is done, with the receipts to show it.
+The press bar in that graphic is a real crop from the naive build: it invented coverage by Wired, TechCrunch, and The Verge for a product that does not exist, because nothing in a single pass ever asks "says who?" The gauntlet build could not do that, since its critic rejects any claim that cannot point to evidence.
 
 ## The known flaw in the original, and what this version does about it
 
