@@ -1,0 +1,36 @@
+description = "Gauntlet loop: bounded builder/critic passes with an explicit usage budget"
+
+prompt = """
+Apply the gauntlet-loop technique to this request: {{args}}
+
+If no request follows, apply it to the task already in progress. The technique: turn one substantial build request into a bounded set of worker passes with clear ownership, evaluators that must cite evidence, and revision loops that run until the quality checks pass. Default to running it. Fall back to a single direct pass only when the task is genuinely small or so tightly coupled that splitting it would cause collisions, and note that call in one line. If the user asks for just the prompt or spec ("convert this"), return the copy-ready gauntlet prompt without executing it.
+
+## Set the usage budget first
+
+A gauntlet spends the user's usage limits far faster than a single pass; every extra worker and revision cycle multiplies spend.
+
+- If the user already stated a budget ("use 75% of my limit"), honor it and move on. Never re-ask.
+- Otherwise, ask one question before building the spec: "How much of your remaining usage limit should this build use: 50% (recommended starting point), 75% (bigger builds), or 95% (maximum-quality run)?" Default to 50% if they decline to choose.
+- Treat the chosen share as the run's hard budget. Size the number of tracks and the cycle count to fit inside it.
+- Escalate only up the ladder, only with consent: if the budget is spent while must-have checks still fail, or the result passes but the user wants more polish, stop, report what the spend bought, and offer the next rung: 50%, then 75%, then 95%. Never plan past 95%; the remaining headroom is the user's.
+
+## Set up the gauntlet
+
+1. Normalize the brief: pin down the outcome, source-of-truth inputs, must-haves, deliverables, and acceptance criteria. Proceed on sensible assumptions and label the material ones instead of interrogating the user.
+2. Ground the direction: if a validated baseline, brief, or draft exists, treat it as the reference. If none exists, run one strong solo pass first to establish the target. The gauntlet polishes a sound target; it can't rescue an accidental one.
+3. Decompose by ownership: 2 to 4 tracks by default, each with one non-overlapping objective, exclusive ownership of its files or sections, an expected artifact, and local checks it must pass before handing off. Never let two tracks touch the same artifact in the same cycle.
+4. Design the tests before the build, strongest evidence first: (a) deterministic checks such as builds, tests, schemas, and calculations; (b) execution evidence: run it, render it, click through it; (c) comparison against source-of-truth references; (d) rubric-based critique for what only judgment can see, citing concrete failures against the rubric, never vibes.
+5. Bound the loop: default 3 revision cycles; stop early when every must-have and should-level check passes; stop and report when a cycle fixes nothing, evidence is unavailable, a needed decision is missing, or the budget share is spent.
+
+## Execute
+
+With no parallel subagent tool, run each track as its own focused pass in dependency order, holding each to its ownership boundary and local checks before moving on. The discipline (one owner per artifact, tests designed up front, evidence-backed revision) is what delivers the quality; parallelism is only a speed optimization.
+
+1. Show the setup in a few lines before starting: budget share, track roster with ownership, test plan, cycle budget. This is a heads-up, not a permission request.
+2. Run evaluators only once artifacts exist. Each evaluator verdict must cite evidence: test output, a rendered result, a source, a calculation, or an exact artifact location. Feed concrete failures back to the owning track for the next cycle. Reject feedback that is purely stylistic, expands scope, or can't point to evidence.
+3. Integrate at the end: confirm every artifact arrived, resolve conflicts and coverage gaps, and re-run the full evaluation order on the integrated result, not just the pieces. Unresolved failures get reported, not hidden.
+
+## Final response
+
+Lead with the tested outcome: what passed and the evidence, what changed across cycles, remaining risks or unverified criteria, and a one-line accounting of roughly how much of the chosen budget was used. Don't declare done while a must-have check fails, and don't keep polishing after the budget is spent.
+"""

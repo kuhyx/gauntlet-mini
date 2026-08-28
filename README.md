@@ -1,26 +1,84 @@
 # Gauntlet Loop
 
-An agent skill that turns one big request into a small team of AI agents that build, check each other's work, and revise until the result actually passes its quality tests — instead of one agent doing one long pass and hoping for the best.
+An agent skill that turns one big request into a small team of AI agents: workers that build, critics that judge the work against a written quality bar, and a loop that keeps running until the checks pass or the budget you set runs out.
 
-It's agent-agnostic: it ships in the standard `SKILL.md` agent-skill format, plus a self-contained prompt port for agents that don't load skills.
+The whole idea in one sentence: instead of telling your agent "make it amazing" and hoping, you make it write down what good means first, then run builders and critics against that bar until the work clears it.
 
-Think of it like a general contractor running a job site: one lead sets the plan, specialists each own their piece, inspectors check the work against a punch list, and nothing ships until the punch list is clear.
+It ships in the standard `SKILL.md` agent-skill format, with a self-contained prompt port for agents that don't load skills. Nothing here is tied to one vendor.
 
-## Why it exists
+## Where this comes from
 
-Asking an AI to "make it amazing" usually gets you one long, unchecked draft. The gauntlet flips that: the quality bar is written down **before** the work starts, separate workers build in parallel without stepping on each other, and evaluators verify the result with real evidence (tests, screenshots, source checks) — not vibes. Failed checks go back to the responsible worker for another pass. The loop is bounded, so it converges instead of running forever.
+None of this is an original idea, and pretending otherwise would be silly. The lineage:
+
+**Matt Shumer** named the gauntlet loop and wrote the prompt that made it famous, while building his viral [Claude of Duty](https://github.com/robonuggets/gauntlet-loop) demo. His core insight is the part worth stealing even if you ignore the rest of this repo: an agent grading its own work drifts toward "good enough," so you give the critic fresh context, a concrete reference to compare against, and a binary choice instead of a score. Jay E at [RoboNuggets](https://github.com/robonuggets/gauntlet-loop) later packaged that prompt into a widely shared skill.
+
+Underneath that sit two of the workflow patterns from Anthropic's [Building Effective Agents](https://www.anthropic.com/engineering/building-effective-agents) essay from December 2024: orchestrator-workers, where a lead agent splits a task and delegates the pieces, and evaluator-optimizer, where a generator and a critic trade drafts and feedback in a loop.
+
+And those are old engineering ideas wearing new clothes. Test-driven development writes the test before the code. Code review works because the author never approves their own pull request. A construction site runs on a punch list: inspectors walk the job with a written list of defects, and nothing gets handed over until the list is clear. This skill is those habits, applied to a fleet of AI agents.
+
+What this version adds: a hard usage budget you pick before anything runs, model tiering so cheap models handle the grunt work, ownership rules so parallel workers never fight over the same file, and an evidence hierarchy that ranks what critics are allowed to count as proof.
+
+## Why bother
+
+One long pass gets you one unchecked draft. The failure mode is predictable: models are lenient graders of their own output, so "review your work and fix any issues" mostly produces a confident paragraph about how few issues there were.
+
+The gauntlet splits the roles. Builders build. A separate critic, with no memory of the build decisions, checks the result against criteria that were written down before the first line of work. When a check fails, the failure goes back to the worker that owns that piece, with the evidence attached: the failing test output, the screenshot, the unsupported claim. Then another cycle runs. The loop is bounded, so it converges instead of wandering forever.
+
+## How it works
+
+Seven steps, and the reasoning behind each one:
+
+1. **Pin the brief.** The skill extracts what you want, what done means, and what materials exist, then proceeds on labeled assumptions instead of interrogating you.
+
+2. **Get the direction right before the fleet arrives.** If there's no existing draft or plan, one strong solo pass establishes the target first. This matters more than anything after it: the gauntlet sharpens a sound target, and every worker-hour spent polishing the wrong thing is pure waste.
+
+3. **Split by ownership.** Usually 2 to 4 workers, each with one objective and exclusive ownership of its files or sections. The reason is mechanical, not philosophical: two agents editing the same artifact in the same cycle produce conflicts that cost more to untangle than the parallelism saved.
+
+4. **Write the tests before the build, ranked by evidence strength.** Deterministic checks come first (compilers, test suites, schema validators: cheap, binary, and impossible to argue with). Then execution evidence: actually run the thing, render it, click through it. Then comparison against reference material. Judgment calls against a written rubric come last, and a critic's opinion never overrules a passing test or substitutes for one that could have been run. Feedback that can't point to evidence gets rejected outright.
+
+5. **Right-size the brainpower.** The strongest model handles direction and the final verdict, because a wrong call there wastes the entire fleet's work. Well-specified implementation and research sweeps run on cheaper, faster models. Spending top-model tokens on work the spec already thought through buys nothing except a bigger bill against your usage limit.
+
+6. **Loop with a leash.** Three revision cycles by default. The loop stops early when every check passes, and stops honestly when a cycle changes nothing, because a cycle that fixes nothing is a signal that the spec or the inputs are the problem, not the effort.
+
+7. **Assemble and re-verify the whole.** Pieces that pass separately can still fail together, so the final step runs the full evaluation order on the integrated result, then reports what passed, what changed across cycles, and anything still unresolved. Hidden failures are treated as lying.
+
+## The budget: read this before running it
+
+This skill spends your usage limit fast. Running several agents multiplies token spend. That's the point, and it's also the cost, so the skill refuses to start without a budget.
+
+The budget is a share of your remaining usage window (most plans meter usage in 5-hour rolling windows). Two ways to set it:
+
+Tell the agent up front, in the same message as your request:
+
+> `/gauntlet-loop build me a landing page for my product, use 50% of my limit`
+
+Or say nothing and let it ask. Before spinning anything up, it offers three tiers:
+
+| Tier | When to pick it |
+|------|-----------------|
+| 50%, the recommended start | Most builds. Leaves half your window for everything else. |
+| 75% | Bigger builds, or a second pass after a 50% run got close. |
+| 95% | A maximum-quality run. Assume the window is spent afterward. |
+
+Start at 50%. If the result isn't there when the budget runs out, the skill stops, shows you what the spend bought, and offers the next rung: 50%, then 75%, then 95%. It never escalates on its own, and it never plans past 95%. Check what's left of your window with your agent's usage command (typically `/usage` or `/status`).
 
 ## Install
 
-**Agents that load `SKILL.md` skills** — clone this repo into your agent's skills folder. For example:
+Pick your agent. Each one gets the same technique; only the packaging changes.
+
+### Add to Claude Code
+
+Claude Code loads `SKILL.md` skills straight from a folder, so the repo root is the install:
 
 ```bash
 git clone https://github.com/cyog941/gauntlet-loop.git ~/.claude/skills/gauntlet-loop
 ```
 
-Open a new session and it's available as `/gauntlet-loop`.
+Open a new session and it's available as `/gauntlet-loop`. This also works for any other agent that reads the `SKILL.md` agent-skill format: point the clone at that agent's skills folder instead.
 
-**Codex** — no skill loader, but any markdown file in `~/.codex/prompts/` becomes a slash command. A self-contained port lives in [`codex/gauntlet-loop.md`](codex/gauntlet-loop.md):
+### Add to Codex
+
+Codex has no skill loader, but any markdown file in `~/.codex/prompts/` becomes a slash command. A self-contained port lives in [`codex/gauntlet-loop.md`](codex/gauntlet-loop.md):
 
 ```bash
 mkdir -p ~/.codex/prompts
@@ -28,57 +86,31 @@ curl -fsSL https://raw.githubusercontent.com/cyog941/gauntlet-loop/main/codex/ga
   -o ~/.codex/prompts/gauntlet-loop.md
 ```
 
-Restart Codex and run `/gauntlet-loop <your request>`. One difference: with no parallel subagent tool, workers run as sequential ownership-bounded passes by default — or as real workers via `codex exec -m <model>` when shell access allows.
+Restart Codex and run `/gauntlet-loop <your request>`. One difference: with no parallel subagent tool, workers run as sequential ownership-bounded passes by default, or as real workers via `codex exec -m <model>` when shell access allows.
 
-**Any other agent** — [`codex/gauntlet-loop.md`](codex/gauntlet-loop.md) doubles as the portable, self-contained version. Drop it wherever your agent takes custom prompts or instructions (its prompt/command folder, or its `AGENTS.md`-style instructions file) and adjust the budget wording to that agent's usage limits. The technique itself — budget first, ground the direction, split by ownership, write the tests before the build, loop with a leash, verify the integrated whole — ports anywhere.
+### Add to Gemini CLI
 
-## ⚠️ Before you run it: set a usage budget
+Gemini CLI loads custom commands from TOML files in `~/.gemini/commands/`. A port lives in [`gemini/gauntlet-loop.toml`](gemini/gauntlet-loop.toml):
 
-**This skill spends your usage limit fast.** Running several agents in parallel multiplies token spend — that's the whole point, and it's also the cost. So the skill is built around an explicit budget, expressed as a share of your remaining usage window (the 5-hour rolling limits most plans have):
+```bash
+mkdir -p ~/.gemini/commands
+curl -fsSL https://raw.githubusercontent.com/cyog941/gauntlet-loop/main/gemini/gauntlet-loop.toml \
+  -o ~/.gemini/commands/gauntlet-loop.toml
+```
 
-- **Best way: tell the agent your budget up front**, in the same message as your request:
+Restart Gemini CLI and run `/gauntlet-loop <your request>`. Same sequential-pass adaptation as Codex.
 
-  > `/gauntlet-loop build me a landing page for my product — use 50% of my limit`
+### Add to Hermes or any other agent
 
-- **If you don't, the skill asks first.** Before spinning anything up, it asks how much of your remaining usage window the build may use and offers three tiers:
+[`codex/gauntlet-loop.md`](codex/gauntlet-loop.md) doubles as the portable, self-contained version. Drop it wherever your agent takes custom prompts or instructions: its prompt or command folder if it has one, otherwise its `AGENTS.md`-style instruction file. Adjust the budget wording to whatever usage limits that agent has. The technique itself ports anywhere an agent can run bounded sub-tasks.
 
-  | Tier | When to pick it |
-  |------|-----------------|
-  | **50%** — recommended starting point | Most builds. Leaves half your window for everything else. |
-  | **75%** | Bigger builds, or a second pass after a 50% run got close. |
-  | **95%** | Maximum-quality run. Assume the window is spent afterward. |
+## Good fits and bad fits
 
-- **Start at 50%.** If the result isn't there yet when the budget runs out, the skill stops, shows you what the spend bought, and offers the next rung — 50% → 75% → 95%. It never escalates on its own, and it never plans past 95%.
+Use it for substantial builds where good is checkable: a landing page, an app feature, a research report, a deck. Use it to improve an existing thing without changing its direction, like an audit-and-fix pass across design and performance. Use it for research that splits naturally, several competitors or several markets, with one synthesis at the end.
 
-Check what's left of your window anytime with your agent's usage command (typically `/usage` or `/status`).
+Skip it for small, tightly scoped changes. A one-line fix doesn't need a committee, and the skill will say so and just do the work with one agent. Same for work so intertwined that parallel workers would collide on the same file.
 
-## How it works (plain-English version)
-
-When you invoke it, the skill walks through seven steps:
-
-1. **Understand the job.** It pins down what you want, what "done" means, and what materials it has to work from — without grilling you with questions.
-2. **Get the direction right first.** If there's no existing draft or plan to build on, it does one strong solo pass to establish the target before bringing in the team. Polishing the wrong thing fast is still the wrong thing.
-3. **Split the work by ownership.** Usually 2–4 workers, each with one clear job and exclusive ownership of their piece, so nobody overwrites anyone else.
-4. **Write the tests before the build.** The quality checklist comes first: automated checks where possible (does it build? do the numbers add up?), then real-world evidence (run it, open it in a browser), then judgment calls against a written rubric.
-5. **Right-size the brainpower.** The strongest model handles direction and final sign-off; cheaper, faster models handle the well-specified grunt work. Same quality, much less of your usage limit burned.
-6. **Loop with a leash.** Workers revise based on specific, evidence-backed feedback — up to a set number of rounds, within your chosen budget. It stops early when everything passes, and stops honestly when it's stuck.
-7. **Assemble and verify the whole.** One agent puts the pieces together and re-checks the final result end-to-end, then reports what passed, what changed, and anything still unresolved.
-
-## Best ways to use it
-
-**Great fits:**
-- Building something substantial from scratch — a landing page, an app feature, a report, a deck — where "good" is checkable.
-- Improving an existing thing without changing its direction (audits + fixes across design, performance, and accessibility, for example).
-- Research that splits naturally — several competitors, several markets, several papers — with one synthesis at the end.
-
-**Bad fits (the skill will just do these directly with one agent):**
-- Small, tightly-scoped changes. A one-line fix doesn't need a committee.
-- Work so intertwined that parallel workers would collide on the same file.
-
-**Tips:**
-- Give it your raw materials — briefs, examples, links, an existing draft. The gauntlet sharpens a target; it doesn't guess one.
-- Say what "must be true" for you to accept the result. Concrete must-haves become the tests.
-- Want just the plan, not the run? Say so: *"convert this to a gauntlet prompt"* returns a copy-ready prompt instead of executing it.
+Two habits make it work better. Give it your raw materials: briefs, examples, links, an existing draft. The gauntlet sharpens a target; it doesn't guess one. And say what must be true for you to accept the result, because concrete must-haves become the tests. If you want the plan without the run, say "convert this to a gauntlet prompt" and you get a copy-ready prompt instead of an execution.
 
 ## What's in the repo
 
@@ -87,11 +119,13 @@ gauntlet-loop/
 ├── SKILL.md                        # the agent skill (standard SKILL.md format)
 ├── codex/
 │   └── gauntlet-loop.md            # self-contained portable port (Codex custom prompt)
+├── gemini/
+│   └── gauntlet-loop.toml          # Gemini CLI custom-command port
 └── references/
-    ├── evaluator-patterns.md       # how work gets checked, by discipline
-    └── examples.md                 # worked examples of good/bad gauntlet fits
+    ├── evaluator-patterns.md       # what counts as evidence, by discipline
+    └── examples.md                 # worked examples of good and bad gauntlet fits
 ```
 
-## License
+## License and credit
 
-[MIT](LICENSE)
+[MIT](LICENSE). The gauntlet loop technique and its name are Matt Shumer's; the underlying workflow patterns are described in Anthropic's [Building Effective Agents](https://www.anthropic.com/engineering/building-effective-agents). This repo is an independent implementation that adds the budget ladder, model tiering, ownership rules, and the evidence hierarchy.
