@@ -1,5 +1,9 @@
 # Gauntlet Loop
 
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![Works with](https://img.shields.io/badge/works%20with-Claude%20Code%20·%20Codex%20·%20Gemini%20CLI-blue.svg)](#install)
+[![GitHub stars](https://img.shields.io/github/stars/cyog941/gauntlet-loop?style=social)](https://github.com/cyog941/gauntlet-loop/stargazers)
+
 An agent skill that turns one big request into a small team of AI agents: workers that build, critics that judge the work against a written quality bar, and a loop that keeps running until the checks pass or the budget you set runs out.
 
 The whole idea in one sentence: instead of telling your agent "make it amazing" and hoping, you make it write down what good means first, then run builders and critics against that bar until the work clears it.
@@ -50,7 +54,7 @@ The budget is a share of your remaining usage window (most plans meter usage in 
 
 Tell the agent up front, in the same message as your request:
 
-> `/gauntlet-loop build me a landing page for my product, use 50% of my limit`
+> `/gauntlet-loop build me a landing page for my product, use 50% of my session/token limit as a hard stop to complete this build`
 
 Or say nothing and let it ask. Before spinning anything up, it offers three tiers:
 
