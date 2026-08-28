@@ -3,7 +3,7 @@ description: Build and test with the gauntlet-loop technique — bounded worker/
 argument-hint: [what to build, and optionally a usage budget like "use 50% of my limit"]
 ---
 
-# Gauntlet Loop
+# Gauntlet Mini
 
 Apply the gauntlet-loop technique to the request that follows (or, if none follows, to the task already in progress): turn one substantial build request into a bounded set of worker passes with clear ownership, evaluators with real evidence, and revision loops that run until the quality checks pass — bounded so the loop converges instead of wandering.
 

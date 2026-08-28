@@ -1,10 +1,10 @@
-# Gauntlet Loop
+# Gauntlet Mini
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Works with](https://img.shields.io/badge/works%20with-Claude%20Code%20·%20Codex%20·%20Gemini%20CLI-blue.svg)](#install)
-[![GitHub stars](https://img.shields.io/github/stars/cyog941/gauntlet-loop?style=social)](https://github.com/cyog941/gauntlet-loop/stargazers)
+[![GitHub stars](https://img.shields.io/github/stars/cyog941/gauntlet-mini?style=social)](https://github.com/cyog941/gauntlet-mini/stargazers)
 
-The gauntlet loop that won't torch your usage limits. Workers build, critics judge the work against a written quality bar, and the loop runs inside a budget you pick before anything starts: 50% of your usage window, then 75%, then 95%, each step only with your consent.
+The gauntlet loop with a mini bill. Workers build, critics judge the work against a written quality bar, and the loop runs inside a budget you pick before anything starts: 50% of your usage window, then 75%, then 95%, each step only with your consent. Mini refers to what it spends, never to what it builds.
 
 The loop's famous demos are also famous for their bills. Viral runs of the original prompt burned $1,200 to $1,700 in tokens on single builds, and the most upvoted community verdict on the whole trend is blunt: "guaranteed token burn with fingers-crossed results." This version keeps the quality machinery and removes the open-ended spend.
 
@@ -70,7 +70,7 @@ The budget is a share of your remaining usage window (most plans meter usage in 
 
 Tell the agent up front, in the same message as your request:
 
-> `/gauntlet-loop build me a landing page for my product, use 50% of my session/token limit as a hard stop to complete this build`
+> `/gauntlet-mini build me a landing page for my product, use 50% of my session/token limit as a hard stop to complete this build`
 
 Or say nothing and let it ask. Before spinning anything up, it offers three tiers:
 
@@ -91,44 +91,44 @@ Pick your agent. Each one gets the same technique; only the packaging changes.
 One command via [skills.sh](https://skills.sh):
 
 ```bash
-npx skills add cyog941/gauntlet-loop
+npx skills add cyog941/gauntlet-mini
 ```
 
 Or clone it straight into the skills folder:
 
 ```bash
-git clone https://github.com/cyog941/gauntlet-loop.git ~/.claude/skills/gauntlet-loop
+git clone https://github.com/cyog941/gauntlet-mini.git ~/.claude/skills/gauntlet-mini
 ```
 
-Open a new session and it's available as `/gauntlet-loop`. This also works for any other agent that reads the `SKILL.md` agent-skill format: point the clone at that agent's skills folder instead.
+Open a new session and it's available as `/gauntlet-mini`. This also works for any other agent that reads the `SKILL.md` agent-skill format: point the clone at that agent's skills folder instead.
 
 ### Add to Codex
 
-Codex has no skill loader, but any markdown file in `~/.codex/prompts/` becomes a slash command. A self-contained port lives in [`codex/gauntlet-loop.md`](codex/gauntlet-loop.md):
+Codex has no skill loader, but any markdown file in `~/.codex/prompts/` becomes a slash command. A self-contained port lives in [`codex/gauntlet-mini.md`](codex/gauntlet-mini.md):
 
 ```bash
 mkdir -p ~/.codex/prompts
-curl -fsSL https://raw.githubusercontent.com/cyog941/gauntlet-loop/main/codex/gauntlet-loop.md \
-  -o ~/.codex/prompts/gauntlet-loop.md
+curl -fsSL https://raw.githubusercontent.com/cyog941/gauntlet-mini/main/codex/gauntlet-mini.md \
+  -o ~/.codex/prompts/gauntlet-mini.md
 ```
 
-Restart Codex and run `/gauntlet-loop <your request>`. One difference: with no parallel subagent tool, workers run as sequential ownership-bounded passes by default, or as real workers via `codex exec -m <model>` when shell access allows.
+Restart Codex and run `/gauntlet-mini <your request>`. One difference: with no parallel subagent tool, workers run as sequential ownership-bounded passes by default, or as real workers via `codex exec -m <model>` when shell access allows.
 
 ### Add to Gemini CLI
 
-Gemini CLI loads custom commands from TOML files in `~/.gemini/commands/`. A port lives in [`gemini/gauntlet-loop.toml`](gemini/gauntlet-loop.toml):
+Gemini CLI loads custom commands from TOML files in `~/.gemini/commands/`. A port lives in [`gemini/gauntlet-mini.toml`](gemini/gauntlet-mini.toml):
 
 ```bash
 mkdir -p ~/.gemini/commands
-curl -fsSL https://raw.githubusercontent.com/cyog941/gauntlet-loop/main/gemini/gauntlet-loop.toml \
-  -o ~/.gemini/commands/gauntlet-loop.toml
+curl -fsSL https://raw.githubusercontent.com/cyog941/gauntlet-mini/main/gemini/gauntlet-mini.toml \
+  -o ~/.gemini/commands/gauntlet-mini.toml
 ```
 
-Restart Gemini CLI and run `/gauntlet-loop <your request>`. Same sequential-pass adaptation as Codex.
+Restart Gemini CLI and run `/gauntlet-mini <your request>`. Same sequential-pass adaptation as Codex.
 
 ### Add to Hermes or any other agent
 
-[`codex/gauntlet-loop.md`](codex/gauntlet-loop.md) doubles as the portable, self-contained version. Drop it wherever your agent takes custom prompts or instructions: its prompt or command folder if it has one, otherwise its `AGENTS.md`-style instruction file. Adjust the budget wording to whatever usage limits that agent has. The technique itself ports anywhere an agent can run bounded sub-tasks.
+[`codex/gauntlet-mini.md`](codex/gauntlet-mini.md) doubles as the portable, self-contained version. Drop it wherever your agent takes custom prompts or instructions: its prompt or command folder if it has one, otherwise its `AGENTS.md`-style instruction file. Adjust the budget wording to whatever usage limits that agent has. The technique itself ports anywhere an agent can run bounded sub-tasks.
 
 ## Good fits and bad fits
 
@@ -141,12 +141,12 @@ Two habits make it work better. Give it your raw materials: briefs, examples, li
 ## What's in the repo
 
 ```
-gauntlet-loop/
+gauntlet-mini/
 ├── SKILL.md                        # the agent skill (standard SKILL.md format)
 ├── codex/
-│   └── gauntlet-loop.md            # self-contained portable port (Codex custom prompt)
+│   └── gauntlet-mini.md            # self-contained portable port (Codex custom prompt)
 ├── gemini/
-│   └── gauntlet-loop.toml          # Gemini CLI custom-command port
+│   └── gauntlet-mini.toml          # Gemini CLI custom-command port
 └── references/
     ├── evaluator-patterns.md       # what counts as evidence, by discipline
     └── examples.md                 # worked examples of good and bad gauntlet fits
