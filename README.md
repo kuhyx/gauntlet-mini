@@ -1,6 +1,6 @@
 # Gauntlet Loop
 
-A Claude Code skill that turns one big request into a small team of AI agents that build, check each other's work, and revise until the result actually passes its quality tests — instead of one agent doing one long pass and hoping for the best.
+A Claude Code skill (with a Codex port — see [Use with Codex](#use-with-codex-openai)) that turns one big request into a small team of AI agents that build, check each other's work, and revise until the result actually passes its quality tests — instead of one agent doing one long pass and hoping for the best.
 
 Think of it like a general contractor running a job site: one lead sets the plan, specialists each own their piece, inspectors check the work against a punch list, and nothing ships until the punch list is clear.
 
@@ -66,11 +66,34 @@ When you invoke it, the skill walks through seven steps:
 - Say what "must be true" for you to accept the result. Concrete must-haves become the tests.
 - Want just the plan, not the run? Say so: *"convert this to a gauntlet prompt"* returns a copy-ready prompt instead of executing it.
 
+## Use with Codex (OpenAI)
+
+Codex doesn't have skills, but it has custom prompts — any markdown file in `~/.codex/prompts/` becomes a slash command. A self-contained port lives in [`codex/gauntlet-loop.md`](codex/gauntlet-loop.md):
+
+```bash
+mkdir -p ~/.codex/prompts
+curl -fsSL https://raw.githubusercontent.com/cyog941/gauntlet-loop/main/codex/gauntlet-loop.md \
+  -o ~/.codex/prompts/gauntlet-loop.md
+```
+
+(Or copy the file from a clone.) Restart Codex and run `/gauntlet-loop <your request>`.
+
+What's different in the Codex version:
+
+- **Budget = your ChatGPT usage window.** Same 50% → 75% → 95% ladder, measured against the 5-hour usage window on ChatGPT plans. Check what's left with `/status` inside Codex.
+- **Workers run as sequential passes by default** — Codex has no built-in parallel subagent tool. The quality comes from the same discipline (one owner per piece, tests written first, evidence-backed revisions), not from parallelism. When shell access allows, it can instead spawn real workers via `codex exec`, using `-m` to put cheaper models on the grunt-work tracks.
+
+## Other agents
+
+The technique itself is agent-agnostic: budget first, ground the direction, split by ownership, write the tests before the build, loop with a leash, verify the integrated whole. To port it to any other coding agent (Gemini CLI, Cursor, aider, …), take `codex/gauntlet-loop.md` — it's the self-contained version — and drop it wherever that agent takes custom instructions (its prompt/command folder, or its `AGENTS.md`-style instructions file), swapping the budget wording for whatever usage limit that agent has.
+
 ## What's in the repo
 
 ```
 gauntlet-loop/
-├── SKILL.md                        # the skill itself
+├── SKILL.md                        # the Claude Code skill
+├── codex/
+│   └── gauntlet-loop.md            # self-contained Codex custom-prompt port
 └── references/
     ├── evaluator-patterns.md       # how work gets checked, by discipline
     └── examples.md                 # worked examples of good/bad gauntlet fits
