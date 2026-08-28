@@ -4,9 +4,11 @@
 [![Works with](https://img.shields.io/badge/works%20with-Claude%20Code%20·%20Codex%20·%20Gemini%20CLI-blue.svg)](#install)
 [![GitHub stars](https://img.shields.io/github/stars/cyog941/gauntlet-loop?style=social)](https://github.com/cyog941/gauntlet-loop/stargazers)
 
-An agent skill that turns one big request into a small team of AI agents: workers that build, critics that judge the work against a written quality bar, and a loop that keeps running until the checks pass or the budget you set runs out.
+The gauntlet loop that won't torch your usage limits. Workers build, critics judge the work against a written quality bar, and the loop runs inside a budget you pick before anything starts: 50% of your usage window, then 75%, then 95%, each step only with your consent.
 
-The whole idea in one sentence: instead of telling your agent "make it amazing" and hoping, you make it write down what good means first, then run builders and critics against that bar until the work clears it.
+The loop's famous demos are also famous for their bills. Viral runs of the original prompt burned $1,200 to $1,700 in tokens on single builds, and the most upvoted community verdict on the whole trend is blunt: "guaranteed token burn with fingers-crossed results." This version keeps the quality machinery and removes the open-ended spend.
+
+The whole idea in one sentence: instead of telling your agent "make it amazing" and hoping, you make it write down what good means first, then run builders and critics against that bar until the work clears it or the budget says stop.
 
 It ships in the standard `SKILL.md` agent-skill format, with a self-contained prompt port for agents that don't load skills. Nothing here is tied to one vendor.
 
@@ -21,6 +23,22 @@ Underneath that sit two of the workflow patterns from Anthropic's [Building Effe
 And those are old engineering ideas wearing new clothes. Test-driven development writes the test before the code. Code review works because the author never approves their own pull request. A construction site runs on a punch list: inspectors walk the job with a written list of defects, and nothing gets handed over until the list is clear. This skill is those habits, applied to a fleet of AI agents.
 
 What this version adds: a hard usage budget you pick before anything runs, model tiering so cheap models handle the grunt work, ownership rules so parallel workers never fight over the same file, and an evidence hierarchy that ranks what critics are allowed to count as proof.
+
+## Receipts, not vibes
+
+Same one-line brief ("build a landing page for a fictional sleep-tracking ring"), same model on both sides. The only variable is the process.
+
+| One naive pass | Under the gauntlet's rules |
+|---|---|
+| ![Single-pass build](assets/demo/single-pass-desktop.png) | ![Gauntlet build](assets/demo/gauntlet-desktop.png) |
+
+Both pages look respectable, and that is exactly the point: looks are not the difference. The naive pass shipped a fabricated "backed & covered by Wired, TechCrunch, The Verge" press bar and a stack of claims nobody checked. The gauntlet build worked from eight criteria written before the first line of code and had to prove each one with evidence before calling itself done: contrast ratios computed (lowest pair 5.16:1), FAQ keyboard toggles actually pressed, a full DOM scan for overflow at 390px, nav anchors clicked and verified. One process produces a page that looks done. The other produces a page that is done, with the receipts to show it.
+
+## The known flaw in the original, and what this version does about it
+
+The most-shared critique of the gauntlet loop: it only works when a real-world reference exists to compare against. Claude of Duty had Call of Duty. Point the original prompt at something novel and the blind critic invents an arbitrary standard, then burns tokens chasing it. "Make it utterly perfect" becomes, as one Redditor put it, the new "make no mistakes." Even the famous demo never actually passed its own bar: the critic scored it 3.6 out of 10, days of looping pushed that to 5.1, and the run was stopped by hand.
+
+This version's answer is structural. A grounding phase establishes a validated baseline before any fan-out, so the fleet always sharpens a real target. Subjective quality gets translated into observable criteria, because "iterate until it's amazing" is a budget with no bottom. And three stop rules replace "utterly perfect": stop when every check passes, stop when a cycle fixes nothing, stop when the budget share is spent.
 
 ## Why bother
 
@@ -72,7 +90,13 @@ Pick your agent. Each one gets the same technique; only the packaging changes.
 
 ### Add to Claude Code
 
-Claude Code loads `SKILL.md` skills straight from a folder, so the repo root is the install:
+One command via [skills.sh](https://skills.sh):
+
+```bash
+npx skills add cyog941/gauntlet-loop
+```
+
+Or clone it straight into the skills folder:
 
 ```bash
 git clone https://github.com/cyog941/gauntlet-loop.git ~/.claude/skills/gauntlet-loop
