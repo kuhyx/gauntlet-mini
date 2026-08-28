@@ -50,7 +50,7 @@ Restart Codex and run `/gauntlet-loop <your request>`. One difference: with no p
 
 - **Start at 50%.** If the result isn't there yet when the budget runs out, the skill stops, shows you what the spend bought, and offers the next rung — 50% → 75% → 95%. It never escalates on its own, and it never plans past 95%.
 
-Check what's left of your window anytime with your agent's usage command (`/usage` in Claude Code, `/status` in Codex).
+Check what's left of your window anytime with your agent's usage command (typically `/usage` or `/status`).
 
 ## How it works (plain-English version)
 
