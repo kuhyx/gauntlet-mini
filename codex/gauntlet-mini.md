@@ -44,7 +44,7 @@ Codex has no built-in parallel subagent tool, so run the fan-out one of two ways
 Either way:
 
 1. Write the setup to `gauntlet-state.md` and show it in a few lines before starting: budget share, track roster with ownership, the Must/Should/Polish checklist the evaluators will grade against, test plan. This is a heads-up, not a permission request.
-2. Run evaluators only once artifacts exist. Each evaluator verdict must cite evidence: test output, a rendered result, a source, a calculation, or an exact artifact location. Feed concrete failures back to the owning track for the next cycle. Reject feedback that is purely stylistic, expands scope, or can't point to evidence.
+2. Run evaluators only once artifacts exist. Each evaluator verdict must cite evidence: test output, a rendered result, a source, a calculation, or an exact artifact location. Verify each finding before fixing it: open what it cites and confirm the failure is really there, and drop findings that point at something that does not exist. Feed verified failures back to the owning track for the next cycle. Reject feedback that is purely stylistic, expands scope, or can't point to evidence.
 3. Integrate at the end: confirm every artifact arrived, resolve conflicts and coverage gaps, and re-run the full evaluation order on the integrated result, not just the pieces. Unresolved failures get reported, not hidden.
 
 ## Final response

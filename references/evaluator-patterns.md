@@ -12,7 +12,7 @@ Use, in order:
 4. accessibility and performance checks;
 5. rubric review for maintainability and polish.
 
-Good must-have criteria include successful build, required flows working, no console errors, keyboard access, and exact data behavior. Treat subjective visual preference as Polish unless the brief makes it essential.
+Good must-have criteria include successful build, required flows working, no console errors, keyboard access, and exact data behavior. Treat subjective visual preference as polish unless the brief makes it essential.
 
 ## Research and analysis
 
@@ -50,15 +50,16 @@ Check factual grounding and required coverage before tone or elegance. Use expli
 
 ## Evaluator result format
 
-Require each evaluator to return:
+Require each evaluator to return one block per finding, so a critic with five findings returns five blocks:
 
 ```text
 Verdict: PASS | REVISE | BLOCKED
 Criterion: [rubric item]
+Severity: must | should | polish
 Evidence: [test output, source, screenshot, calculation, or exact artifact location]
 Failure: [specific gap, if any]
 Required fix: [smallest change that satisfies the criterion]
 Confidence: high | medium | low
 ```
 
-Reject feedback that is purely stylistic, expands scope, or cannot point to evidence.
+Severity is the rubric tier of the criterion, so the loop can count failing Must and Should checks. Reject feedback that is purely stylistic, expands scope, or cannot point to evidence, and verify the evidence of every finding you keep before it gets fixed.
