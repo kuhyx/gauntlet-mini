@@ -1,6 +1,6 @@
 ---
 name: gauntlet-mini
-description: Build and test with the gauntlet-loop technique. Convert a substantial prompt into a bounded worker/evaluator fan-out, then set it up and execute it end-to-end at the highest quality the session budget allows, tiering models per role (top-tier director/verifier where judgment decides the outcome; cheaper workers elsewhere). Use for requests mentioning a gauntlet/guantlet loop, worker-critic loops, fan-out subagents, multi-agent orchestration, parallel workers, iterative refinement, or building a complex deliverable through delegated work with evaluators and revision loops. Produce a prompt-only conversion when the user explicitly asks for just the prompt or spec.
+description: Build and test with the gauntlet-loop technique. Convert a substantial prompt into a bounded worker/evaluator fan-out, then set it up and execute it end-to-end at the highest quality the session budget allows, tiering models per role (top-tier director/verifier where judgment decides the outcome; cheaper workers elsewhere). Use only when the user mentions a gauntlet/guantlet loop or gauntlet-mini, or asks to iterate a task with critic review until it is production-ready. Do not use for general requests to fan out subagents or run parallel workers. Produce a prompt-only conversion when the user explicitly asks for just the prompt or spec.
 ---
 
 # Gauntlet Mini
