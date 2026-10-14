@@ -1,7 +1,7 @@
 # Gauntlet Mini
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![Works with](https://img.shields.io/badge/works%20with-Claude%20Code%20·%20Codex%20·%20Gemini%20CLI-blue.svg)](#install)
+[![Works with](https://img.shields.io/badge/works%20with-Claude%20Code%20·%20Codex%20·%20Gemini%20CLI-blue.svg)](#setup)
 [![GitHub stars](https://img.shields.io/github/stars/cyog941/gauntlet-mini?style=social)](https://github.com/cyog941/gauntlet-mini/stargazers)
 
 The gauntlet loop with a mini bill. Workers build, critics judge the work against a written quality bar, and the loop runs inside a budget you pick before anything starts: 50% of your usage window, then 75%, then 95%, each step only with your consent. Mini refers to what it spends, never to what it builds.
@@ -82,7 +82,7 @@ Or say nothing and let it ask. Before spinning anything up, it offers three tier
 
 Start at 50%. If the result isn't there when the budget runs out, the skill stops, shows you what the spend bought, and offers the next rung: 50%, then 75%, then 95%. It never escalates on its own, and it never plans past 95%. Check what's left of your window with your agent's usage command (typically `/usage` or `/status`).
 
-## Install
+## Setup
 
 Pick your agent. Each one gets the same technique; only the packaging changes.
 
