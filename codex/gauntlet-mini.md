@@ -19,7 +19,7 @@ A gauntlet spends the user's usage limits (the 5-hour and weekly windows on Chat
 
 - If the user already stated a budget ("use 75% of my limit"), honor it and move on. Never re-ask.
 - Otherwise, ask one question before building the spec: **"How much of your remaining 5-hour usage window should this build use: 50% (recommended starting point), 75% (bigger builds), or 95% (maximum-quality run)?"** Default to 50% if they decline to choose. They can check remaining usage with `/status`.
-- Treat the chosen share as the run's hard budget: size the number of tracks, the model choices, and the cycle count to fit inside it.
+- Treat the chosen share as the run's hard budget: size the number of tracks and the model choices to fit inside it.
 - Escalate only up the ladder, only with consent: if the budget is spent while must-have checks still fail, or the result passes but the user wants more polish, stop, report what the spend bought, and offer the next rung: 50% → 75% → 95%. Never plan past 95%; the remaining headroom is the user's.
 
 ## Set up the gauntlet
@@ -32,7 +32,7 @@ A gauntlet spends the user's usage limits (the 5-hour and weekly windows on Chat
    2. execution evidence: run it, render it, browser-check it;
    3. comparison against source-of-truth references;
    4. rubric-based critique for what only judgment can see, citing concrete failures against the rubric, never vibes. Give critics fresh context (the criteria, the artifact, the reference, and nothing about how the work was made), and when a real reference exists, compare blind: artifact and reference side by side, unlabeled, binary pick with cited reasons. When no real reference exists, never let the critic invent one; fall back to the observable criteria from the brief.
-5. **Bound the loop.** Default 3 revision cycles; stop early when every must-have and should-level check passes; stop and report when a cycle fixes nothing, evidence is unavailable, a needed decision is missing, or the budget share is spent.
+5. **Bound the loop.** The user decides when the result is good enough, so there is no fixed cycle count. After each integrated cycle, show the result and the number of failing Must and Should checks against the previous cycle, then ask whether to run another cycle or accept. Stop when the user accepts; stop and report when a cycle fixes nothing (the failing count did not drop), evidence is unavailable, a needed decision is missing, or the budget share is spent. Keep the checklist with each item's status, the cycle number, the failing count per cycle, and the budget used in a `gauntlet-state.md` file, and re-read it after the conversation is summarized.
 
 ## Execute (Codex adaptation)
 
@@ -43,7 +43,7 @@ Codex has no built-in parallel subagent tool, so run the fan-out one of two ways
 
 Either way:
 
-1. Show the setup in a few lines before starting: budget share, track roster with ownership, test plan, cycle budget. This is a heads-up, not a permission request.
+1. Write the setup to `gauntlet-state.md` and show it in a few lines before starting: budget share, track roster with ownership, the Must/Should/Polish checklist the evaluators will grade against, test plan. This is a heads-up, not a permission request.
 2. Run evaluators only once artifacts exist. Each evaluator verdict must cite evidence: test output, a rendered result, a source, a calculation, or an exact artifact location. Feed concrete failures back to the owning track for the next cycle. Reject feedback that is purely stylistic, expands scope, or can't point to evidence.
 3. Integrate at the end: confirm every artifact arrived, resolve conflicts and coverage gaps, and re-run the full evaluation order on the integrated result, not just the pieces. Unresolved failures get reported, not hidden.
 

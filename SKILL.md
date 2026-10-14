@@ -23,7 +23,7 @@ A gauntlet spends the user's session usage limit (the 5-hour window on most plan
 
 - **If the user already stated a budget** ("use 75% of my session limit", "keep this under a third of my session"), honor it and move on. Never re-ask.
 - **Otherwise, ask one question before building the spec** (use AskUserQuestion when available): *"How much of your remaining 5-hour session limit should this build use?"* with three options: **50% (recommended starting point)**, **75% (bigger builds)**, and **95% (maximum-quality run that leaves little session for anything else)**. Default to 50% if the user declines to choose or the session is non-interactive.
-- **Treat the chosen share as the run's hard budget.** Size the roster, model tiers, and cycle count to fit inside it. Check remaining usage at phase boundaries using whatever signal the harness provides (a remaining-token counter in context, `/usage`, or context telemetry); when no signal exists, estimate conservatively and say so.
+- **Treat the chosen share as the run's hard budget.** Size the roster and model tiers to fit inside it. Check remaining usage at phase boundaries using whatever signal the harness provides (a remaining-token counter in context, `/usage`, or context telemetry); when no signal exists, estimate conservatively and say so.
 - **Escalate only up the ladder, only with consent.** If the budget is spent while must-have checks still fail, or the result passes but the user wants more polish, pause, report what the spend bought, and offer the next rung: 50% → 75% → 95%. Never escalate without the user's say-so, and never plan past 95%: the remaining headroom is the user's, not the gauntlet's.
 
 ## Set up the gauntlet
@@ -68,13 +68,17 @@ Pick the cheapest tier that passes the role's own checks; upgrade a role when a 
 
 ### 6. Bound the loop so it converges
 
-Budgets force convergence; they are not there to cut quality short:
+The user decides when the result is good enough. The checks and the budget keep each cycle honest until then:
 
-- revision cycles: default 3. Keep iterating while checks still fail and each cycle demonstrably moves the result;
-- stop early when every must-have and should-level check passes, then spend any remaining planned budget on polish tracks rather than opening new loops;
-- stop and report when a cycle fixes nothing, needed evidence is unavailable, or a missing decision or dependency blocks the fleet;
+- revision cycles: no fixed count. After each integrated cycle, show the user the result, which checks pass and fail, and the failing count against the previous cycle, then ask whether to run another cycle or accept;
+- measure progress as the number of failing Must and Should checks; a cycle moved the result only if that number dropped;
+- when every Must and Should check passes, say so and ask whether to accept or spend the remaining budget on polish;
+- stop when the user accepts the result;
+- stop and report when a cycle fixes nothing (the failing count did not drop), needed evidence is unavailable, or a missing decision or dependency blocks the fleet, then ask the user how to proceed;
 - stop when the session budget the user chose is reached. Report, and offer the next budget rung rather than silently overrunning;
 - translate subjective quality into observable criteria. "Iterate until it's amazing" is a budget with no bottom.
+
+Keep the run's state in a `gauntlet-state.md` file in the workspace: the Must/Should/Polish checklist with each item's status, the cycle number, the failing count per cycle, and the budget used so far. Update it after every cycle and re-read it after the conversation is summarized, so a long run never loses count.
 
 ### 7. Integrate and verify end-to-end
 
@@ -82,7 +86,7 @@ The orchestrator (or a named integrator) confirms every artifact arrived, resolv
 
 ## Run it
 
-1. Build the spec above compactly, show the setup in a few lines (session-budget share, roster with ownership and model tier, test plan, cycle budget), then fan out. This is a heads-up, not a permission request.
+1. Build the spec above compactly, write it to `gauntlet-state.md`, and show the setup in a few lines (session-budget share, roster with ownership and model tier, the Must/Should/Polish checklist the critics will grade against, test plan), then fan out. This is a heads-up, not a permission request.
 2. Pass each worker its model tier explicitly when spawning it.
 3. Run evaluators only once artifacts exist; feed concrete failures back to the owning worker for the next cycle.
 4. Keep integration and final end-to-end verification with the primary agent unless a specialized integrator earns its seat.
@@ -90,7 +94,7 @@ The orchestrator (or a named integrator) confirms every artifact arrived, resolv
 
 ## Convert output (Convert and Improve modes)
 
-Return: the fit decision in one sentence, material assumptions, the spec (outcome, references, constraints, Must/Should/Polish rubric, roster with ownership and model tier, phases, evaluation order, cycle budget and stop rules), and a copy-ready prompt using this skeleton:
+Return: the fit decision in one sentence, material assumptions, the spec (outcome, references, constraints, Must/Should/Polish rubric, roster with ownership and model tier, phases, evaluation order, and stop rules), and a copy-ready prompt using this skeleton:
 
 ```text
 Outcome
@@ -114,9 +118,11 @@ Check in this order: [deterministic], [execution/reference evidence], then
 real reference exists. Must-have failures block completion.
 
 Loop
-Up to [N] revision cycles; stop early when all must-have and should checks pass.
-Stop and report if a cycle stops moving the result, a decision is missing, or
-the session-budget share is spent, then offer the next budget rung (50 → 75 → 95%).
+Keep the checklist, cycle number and failing count in gauntlet-state.md. After
+each cycle, show me the result and the failing Must/Should count, and ask whether
+to run another cycle or accept. Stop when I accept. Stop and report if a cycle
+stops moving the result, a decision is missing, or the session-budget share is
+spent, then offer the next budget rung (50 → 75 → 95%).
 
 Final response
 The integrated artifact, evidence per must-have, changes made across cycles,
@@ -127,6 +133,6 @@ Keep the conversion concise, roughly 500 to 900 words, and read [references/exam
 
 ## Keep it honest
 
-- Every loop bounded; every delegated role carries an explicit model tier and the run carries an explicit session-budget share.
+- Every loop bounded by the user's acceptance and the session budget; every delegated role carries an explicit model tier and the run carries an explicit session-budget share.
 - No overlapping ownership, no evaluator claims without evidence, no hidden failures.
 - Don't declare done while a must-have check fails, and don't keep polishing after the budget is spent.

@@ -8,7 +8,7 @@ The gauntlet loop with a mini bill. Workers build, critics judge the work agains
 
 The loop's famous demos are also famous for their bills. Viral runs of the original prompt burned $1,200 to $1,700 in tokens on single builds, and the most upvoted community verdict on the whole trend is blunt: "guaranteed token burn with fingers-crossed results." This version keeps the quality machinery and removes the open-ended spend.
 
-The whole idea in one sentence: instead of telling your agent "make it amazing" and hoping, you make it write down what good means first, then run builders and critics against that bar until the work clears it or the budget says stop.
+The whole idea in one sentence: instead of telling your agent "make it amazing" and hoping, you make it write down what good means first, then run builders and critics against that bar until you accept the work or the budget says stop.
 
 It ships in the standard `SKILL.md` agent-skill format, with a self-contained prompt port for agents that don't load skills. Nothing here is tied to one vendor.
 
@@ -36,7 +36,7 @@ The press bar in that graphic is a real crop from the naive build: it invented c
 
 The most-shared critique of the gauntlet loop: it only works when a real-world reference exists to compare against. Claude of Duty had Call of Duty. Point the original prompt at something novel and the blind critic invents an arbitrary standard, then burns tokens chasing it. "Make it utterly perfect" becomes, as one Redditor put it, the new "make no mistakes." Even the famous demo never actually passed its own bar: the critic scored it 3.6 out of 10, days of looping pushed that to 5.1, and the run was stopped by hand.
 
-This version's answer is structural. A grounding phase establishes a validated baseline before any fan-out, so the fleet always sharpens a real target. Subjective quality gets translated into observable criteria, because "iterate until it's amazing" is a budget with no bottom. And three stop rules replace "utterly perfect": stop when every check passes, stop when a cycle fixes nothing, stop when the budget share is spent.
+This version's answer is structural. A grounding phase establishes a validated baseline before any fan-out, so the fleet always sharpens a real target. Subjective quality gets translated into observable criteria, because "iterate until it's amazing" is a budget with no bottom. And three stop rules replace "utterly perfect": stop when you accept the result, stop when a cycle fixes nothing, stop when the budget share is spent.
 
 ## Why bother
 
@@ -58,7 +58,7 @@ Seven steps, and the reasoning behind each one:
 
 5. **Right-size the brainpower.** The strongest model handles direction and the final verdict, because a wrong call there wastes the entire fleet's work. Well-specified implementation and research sweeps run on cheaper, faster models. Spending top-model tokens on work the spec already thought through buys nothing except a bigger bill against your usage limit.
 
-6. **Loop with a leash.** Three revision cycles by default. The loop stops early when every check passes, and stops honestly when a cycle changes nothing, because a cycle that fixes nothing is a signal that the spec or the inputs are the problem, not the effort.
+6. **Loop with a leash.** After every cycle you see the result and how many Must and Should checks still fail, and you decide whether another cycle runs. The checklist, the cycle count and the failing counts live in a `gauntlet-state.md` file, so a long run doesn't lose track when the conversation gets summarized. The loop stops honestly when a cycle changes nothing, because a cycle that fixes nothing is a signal that the spec or the inputs are the problem, not the effort.
 
 7. **Assemble and re-verify the whole.** Pieces that pass separately can still fail together, so the final step runs the full evaluation order on the integrated result, then reports what passed, what changed across cycles, and anything still unresolved. Hidden failures are treated as lying.
 
