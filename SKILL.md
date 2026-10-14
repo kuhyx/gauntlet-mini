@@ -30,11 +30,11 @@ A gauntlet spends the user's session usage limit (the 5-hour window on most plan
 
 ### 1. Normalize the brief
 
-Extract or infer the outcome, source-of-truth inputs, must-haves, deliverables, acceptance criteria, and any budget hints. Don't interrogate the user; proceed on sensible assumptions and label the material ones. Ask a question only when different answers would send the fleet in genuinely different directions and guessing wrong would waste the run.
+Extract the outcome, source-of-truth inputs, must-haves, deliverables, acceptance criteria, and any budget hints. Ask the user as many questions as it takes to stop guessing on anything that would change the result (use AskUserQuestion when available, batching related questions); a question costs far less than a fleet built on a wrong guess. Label whatever is still assumed after that.
 
 ### 2. Ground the direction
 
-If a validated baseline, brief, design system, or MVP exists, treat it as the reference. If none exists, run Phase 0 first: one strong pass that establishes the brief or baseline the fleet will sharpen. The gauntlet polishes a sound target; it can't rescue an accidental one, and every worker-hour spent on the wrong target is pure waste.
+If a validated baseline, brief, design system, or MVP exists, treat it as the reference. If none exists, run Phase 0 first: research the existing product and materials, then one strong pass that establishes the brief or baseline the fleet will sharpen. When the research leaves the direction unclear, ask the user before fan-out instead of picking one. During the run, ask again whenever a decision comes up that the brief does not answer, rather than guessing and continuing. The gauntlet polishes a sound target; it can't rescue an accidental one, and every worker-hour spent on the wrong target is pure waste.
 
 ### 3. Decompose by ownership
 

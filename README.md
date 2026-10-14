@@ -48,9 +48,9 @@ The gauntlet splits the roles. Builders build. A separate critic, with no memory
 
 Seven steps, and the reasoning behind each one:
 
-1. **Pin the brief.** The skill extracts what you want, what done means, and what materials exist, then proceeds on labeled assumptions instead of interrogating you.
+1. **Pin the brief.** The skill extracts what you want, what done means, and what materials exist, and asks you whatever it needs so it isn't guessing. Anything still assumed after that is labeled.
 
-2. **Get the direction right before the fleet arrives.** If there's no existing draft or plan, one strong solo pass establishes the target first. This matters more than anything after it: the gauntlet sharpens a sound target, and every worker-hour spent polishing the wrong thing is pure waste.
+2. **Get the direction right before the fleet arrives.** If there's no existing draft or plan, it researches what exists and one strong solo pass establishes the target first. If the direction is still unclear, it asks you rather than picking one. This matters more than anything after it: the gauntlet sharpens a sound target, and every worker-hour spent polishing the wrong thing is pure waste.
 
 3. **Split by ownership.** Usually 2 to 4 workers, each with one objective and exclusive ownership of its files or sections. The reason is mechanical, not philosophical: two agents editing the same artifact in the same cycle produce conflicts that cost more to untangle than the parallelism saved.
 

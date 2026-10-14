@@ -24,8 +24,8 @@ A gauntlet spends the user's usage limits (the 5-hour and weekly windows on Chat
 
 ## Set up the gauntlet
 
-1. **Normalize the brief.** Pin down the outcome, source-of-truth inputs, must-haves, deliverables, and acceptance criteria. Don't interrogate the user; proceed on sensible assumptions and label the material ones.
-2. **Ground the direction.** If a validated baseline, brief, or draft exists, treat it as the reference. If none exists, run one strong solo pass first to establish the target. The gauntlet polishes a sound target; it can't rescue an accidental one.
+1. **Normalize the brief.** Pin down the outcome, source-of-truth inputs, must-haves, deliverables, and acceptance criteria. Ask the user as many questions as it takes to stop guessing on anything that would change the result, and label whatever is still assumed after that.
+2. **Ground the direction.** If a validated baseline, brief, or draft exists, treat it as the reference. If none exists, research the existing product and materials, then run one strong solo pass first to establish the target. When the direction is still unclear, or a decision comes up mid-run that the brief does not answer, ask the user instead of guessing. The gauntlet polishes a sound target; it can't rescue an accidental one.
 3. **Decompose by ownership.** 2 to 4 tracks by default, each with one non-overlapping objective and exclusive ownership of its files/sections/domains, an expected artifact, and local checks it must pass before handing off. Never let two tracks touch the same artifact in the same cycle.
 4. **Design the tests before the build**, strongest evidence first:
    1. deterministic: builds, tests, type checks, schemas, linters, calculations;
