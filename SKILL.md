@@ -9,6 +9,8 @@ Turn a "fan out agents until the result is amazing" request into a build-and-tes
 
 The user invoked this skill because they want the technique applied. Default to running it. Fall back to a single agent only when the task is genuinely small or so tightly coupled that parallel workers would collide, and then just do the work well, noting the call in one line rather than lecturing about fit.
 
+User and repository instructions (CLAUDE.md, AGENTS.md, or the agent's equivalent) override this skill, including when to stop and ask. Read the repository's own instruction file before setting up the gauntlet.
+
 ## Mode
 
 - **Execute** (default): build the spec, run the gauntlet, deliver the tested result.

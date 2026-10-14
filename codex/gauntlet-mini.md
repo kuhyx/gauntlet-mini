@@ -9,6 +9,8 @@ Apply the gauntlet-loop technique to the request that follows (or, if none follo
 
 Default to running it. Fall back to a single direct pass only when the task is genuinely small or so tightly coupled that splitting it would cause collisions, and then just do the work well, noting the call in one line.
 
+User and repository instructions (AGENTS.md or the project's equivalent) override this prompt, including when to stop and ask. Read the repository's own instruction file before setting up the gauntlet.
+
 If the user asks for just the prompt or spec ("convert this"), return the copy-ready gauntlet prompt without executing it.
 
 ## Set the usage budget first

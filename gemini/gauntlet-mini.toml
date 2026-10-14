@@ -5,6 +5,8 @@ Apply the gauntlet-loop technique to this request: {{args}}
 
 If no request follows, apply it to the task already in progress. The technique: turn one substantial build request into a bounded set of worker passes with clear ownership, evaluators that must cite evidence, and revision loops that run until the quality checks pass. Default to running it. Fall back to a single direct pass only when the task is genuinely small or so tightly coupled that splitting it would cause collisions, and note that call in one line. If the user asks for just the prompt or spec ("convert this"), return the copy-ready gauntlet prompt without executing it.
 
+User and repository instructions (GEMINI.md, AGENTS.md, or the project's equivalent) override this prompt, including when to stop and ask. Read the repository's own instruction file before setting up the gauntlet.
+
 ## Set the usage budget first
 
 A gauntlet spends the user's usage limits far faster than a single pass; every extra worker and revision cycle multiplies spend.
