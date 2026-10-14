@@ -38,6 +38,8 @@ Evaluate:
 - technical/export constraints;
 - composition and polish.
 
+For slide decks and documents, render the output (export each slide or page to an image) and inspect every one, since overflow, contrast, and broken layout only show once rendered.
+
 Add a human checkpoint before extended iteration when the direction is subjective. Do not let a model critic invent a new brand direction.
 
 ## Data and spreadsheets

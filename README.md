@@ -149,7 +149,7 @@ gauntlet-mini/
 │   └── gauntlet-mini.toml          # Gemini CLI custom-command port
 └── references/
     ├── evaluator-patterns.md       # what counts as evidence, by discipline
-    └── examples.md                 # worked examples of good and bad gauntlet fits
+    └── conversion-examples.md      # worked examples of good and bad gauntlet fits
 ```
 
 ## License and credit

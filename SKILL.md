@@ -129,7 +129,7 @@ The integrated artifact, evidence per must-have, changes made across cycles,
 and unresolved issues.
 ```
 
-Keep the conversion concise, roughly 500 to 900 words, and read [references/examples.md](references/examples.md) when a concrete pattern would remove ambiguity.
+Keep the conversion concise, roughly 500 to 900 words, and read [references/conversion-examples.md](references/conversion-examples.md) when a concrete pattern would remove ambiguity.
 
 ## Keep it honest
 

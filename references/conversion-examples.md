@@ -20,7 +20,7 @@ Suggested phases:
    - required-section and claim-source checks;
    - accessibility/performance checks;
    - screenshot comparison and final visual rubric.
-4. Stop after two revision cycles or once every must-have criterion passes.
+4. After each cycle, show the page and the failing must-have count, and stop when the user accepts it.
 
 Avoid multiple workers editing the same page at once. Do not grade only on whether it “looks premium.”
 
@@ -63,4 +63,27 @@ Suggested workers:
 - performance/data-loading audit;
 - visual-system consistency audit.
 
-Have the integrator approve proposed changes against the existing design system before implementation. Use deterministic tests and browser evidence first, then one final visual review. Cap at two cycles and list rejected changes that would alter product direction.
+Have the integrator approve proposed changes against the existing design system before implementation. Use deterministic tests and browser evidence first, then one final visual review. Ask the user after each cycle whether to continue, and list rejected changes that would alter product direction.
+
+## Example 5: Client-ready slide deck
+
+User prompt:
+
+> Use a gauntlet loop to build a 10-slide deck on our Q3 results and get it client-ready.
+
+Fit decision: Use a light gauntlet once the audience, the story and the source numbers are pinned down; ask for them before building rather than inventing figures.
+
+Suggested phases:
+
+1. Baseline: confirm the audience, the one message per slide, the source data and any brand template.
+2. Parallel workers:
+   - narrative worker owns the slide outline and speaker notes;
+   - data worker owns every number and chart, each traced to its source;
+   - design worker owns the template and layout once the outline is fixed.
+3. Evaluation:
+   - export every slide to an image and inspect each one: text overflow, contrast, legibility at presentation size, one idea per slide;
+   - check every number and claim against its source;
+   - blind comparison against an earlier client deck when one exists.
+4. After each cycle, show the slides and the failing must-have count, and stop when the user accepts the deck.
+
+Never grade a deck from its outline or its file alone; a slide that reads well as text can still overflow or be unreadable once rendered.
